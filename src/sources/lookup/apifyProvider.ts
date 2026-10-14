@@ -112,7 +112,10 @@ function parseItems(
 export class ApifyProvider implements LookupProvider {
   constructor(
     private readonly token: string,
-    private readonly fetcher: typeof fetch = globalThis.fetch,
+    // Wrapped so fetch is never invoked with `this` set to the provider, which
+    // browsers reject with "Illegal invocation".
+    private readonly fetcher: typeof fetch = (input, init) =>
+      globalThis.fetch(input, init),
   ) {}
 
   async fetchList(

@@ -239,4 +239,23 @@ describe('ApifyProvider', () => {
       ),
     ).toBe(true)
   })
+
+  it('calls the global fetch unbound, as browsers require', async () => {
+    // Browsers throw "Illegal invocation" when fetch runs with a foreign `this`.
+    const browserLikeFetch = vi.fn(function (this: unknown) {
+      if (this !== undefined && this !== globalThis)
+        throw new TypeError('Illegal invocation')
+      return Promise.resolve(response({ error: {} }, 401))
+    })
+    vi.stubGlobal('fetch', browserLikeFetch)
+    try {
+      await expect(
+        new ApifyProvider(fakeCredential).fetchList('someone', 'followers', {
+          maxResults: 25,
+        }),
+      ).rejects.toMatchObject({ kind: 'invalid-token' })
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
 })
