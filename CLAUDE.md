@@ -65,6 +65,13 @@ Apify facts (verified 2026-10-14): the convenient-mode actor is
 never as a query parameter. Its `OUTPUT` status `NO_RESULTS` is ambiguous: a missing
 account, private account, and an account with no followers cannot be distinguished.
 
+Free-plan limits (from the actor's run log, 2026-10-14): Apify users on the free plan get
+**5 runs and 1,000 results per UTC day** via the API, regardless of remaining credit. When
+exceeded, the run still ends `SUCCEEDED` but `OUTPUT.status` is
+`FREE_API_DAILY_LIMIT_REACHED`. Each lookup costs at least 2 runs (followers + following),
+so a free user gets roughly 2 lookups a day. Don't burn the quota with repeated live tests:
+mock `fetch` in tests and keep live smoke runs to one or two.
+
 ## Architecture in one page
 
 Two data sources behind one interface. Everything downstream is source-agnostic.

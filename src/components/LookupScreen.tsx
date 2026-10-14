@@ -17,7 +17,7 @@ const limits = [500, 1000, 5000, 20000]
 export function LookupScreen({ onLookup, onUseExport }: LookupScreenProps) {
   const [token, setToken] = useState(() => getToken() ?? '')
   const [username, setUsername] = useState('')
-  const [maxResults, setMaxResults] = useState(1000)
+  const [maxResults, setMaxResults] = useState(500)
   const [remember, setRemember] = useState(false)
   const [showToken, setShowToken] = useState(false)
   const [progress, setProgress] = useState<string>()
@@ -87,9 +87,9 @@ export function LookupScreen({ onLookup, onUseExport }: LookupScreenProps) {
           </p>
           <p className="mt-1">
             Apify charges from your credit, roughly $0.85 per 1,000 accounts;
-            its free plan includes monthly credit but only a small daily
-            allowance for this lookup. Your Instagram export is the accurate
-            option.
+            its free plan includes monthly credit. On the free plan this lookup
+            is limited to about 2 lookups and 1,000 accounts a day (it resets at
+            midnight UTC). Your Instagram export is the accurate option.
           </p>
           <p className="mt-1">
             A token can access your Apify account, so you may prefer a separate

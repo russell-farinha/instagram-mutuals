@@ -25,7 +25,7 @@ export type LookupErrorKind =
 const messages: Record<LookupErrorKind, string> = {
   'invalid-token': 'That Apify token was not accepted. Check it and try again.',
   'quota-exhausted':
-    'Your Apify account has reached its usage limit. Free Apify plans can only run this lookup a limited amount each day, so try again tomorrow, or add credit in Apify.',
+    'Your Apify account has reached its usage limit. On a free Apify plan this lookup allows about 2 lookups and 1,000 accounts a day, resetting at midnight UTC. Try again then, or upgrade your Apify plan.',
   'not-found-or-private':
     "We couldn't get a list for this account. It may not exist, may be private, or may have no followers.",
   'rate-limited': 'The provider is busy. Please try again shortly.',
