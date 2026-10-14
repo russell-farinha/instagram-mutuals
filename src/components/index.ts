@@ -1,2 +1,5 @@
+export { ExportComparison } from './ExportComparison'
+export { Footer } from './Footer'
+export { Onboarding } from './Onboarding'
 export { ResultsScreen } from './ResultsScreen'
 export { UploadScreen } from './UploadScreen'

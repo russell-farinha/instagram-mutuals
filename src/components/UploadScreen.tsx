@@ -1,4 +1,6 @@
 import { useRef, useState, type ChangeEvent, type DragEvent } from 'react'
+import { Footer } from './Footer'
+import { Onboarding } from './Onboarding'
 
 type UploadScreenProps = {
   onFiles: (files: File[]) => void
@@ -233,6 +235,8 @@ export function UploadScreen({
           </li>
         </ol>
       </details>
+      <Onboarding />
+      <Footer />
     </main>
   )
 }

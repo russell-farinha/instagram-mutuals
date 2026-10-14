@@ -1,4 +1,11 @@
-import { useId, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import {
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react'
 import type { Account } from '../core'
 import {
   accountsToCsv,
@@ -8,6 +15,7 @@ import {
   hasDates,
   type SortOption,
 } from '../lib'
+import { Footer } from './Footer'
 
 type ResultLists = {
   notFollowingBack: Account[]
@@ -23,6 +31,7 @@ type ResultsScreenProps = {
   lists: ResultLists
   sourceLabel: string
   warnings?: readonly string[]
+  comparisonSlot?: ReactNode
   onStartOver: () => void
 }
 
@@ -75,6 +84,7 @@ export function ResultsScreen({
   lists,
   sourceLabel,
   warnings = [],
+  comparisonSlot,
   onStartOver,
 }: ResultsScreenProps) {
   const prefix = useId()
@@ -330,6 +340,8 @@ export function ResultsScreen({
             ) : null}
           </div>
         </section>
+        {comparisonSlot}
+        <Footer />
       </div>
     </main>
   )

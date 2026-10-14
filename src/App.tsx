@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { diff, type Account } from './core'
-import { ResultsScreen, UploadScreen } from './components'
+import { ExportComparison, ResultsScreen, UploadScreen } from './components'
 import { ExportError, ExportFileSource } from './sources'
 
 type Results = {
@@ -57,6 +57,14 @@ function App() {
         }}
         sourceLabel="Instagram export"
         warnings={results.warnings}
+        comparisonSlot={
+          <ExportComparison
+            newerSnapshot={{
+              followers: results.followers,
+              following: results.following,
+            }}
+          />
+        }
         onStartOver={() => {
           setResults(undefined)
           setError(undefined)

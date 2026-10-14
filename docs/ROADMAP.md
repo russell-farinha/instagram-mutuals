@@ -6,45 +6,45 @@ us.
 
 ## Phase 0 — Scaffold
 
-- [ ] Vite + React + TypeScript, strict mode
-- [ ] Tailwind
-- [ ] Vitest
-- [ ] ESLint + Prettier
-- [ ] GitHub Actions: typecheck, lint, test on PR
-- [ ] GitHub Actions: build + deploy to Pages on `main`
+- [x] Vite + React + TypeScript, strict mode
+- [x] Tailwind
+- [x] Vitest
+- [x] ESLint + Prettier
+- [x] GitHub Actions: typecheck, lint, test on PR
+- [x] GitHub Actions: build + deploy to Pages on `main`
 
 ## Phase 1 — The comparison engine
 
 Pure logic, no UI, fully tested. Everything else depends on this being right.
 
-- [ ] `Account` and `FollowDataSource` types
-- [ ] `diff()` → mutuals / not-following-back / fans
-- [ ] Unit tests: empty lists, one-sided, full overlap, case differences in usernames,
+- [x] `Account` and `FollowDataSource` types
+- [x] `diff()` → mutuals / not-following-back / fans
+- [x] Unit tests: empty lists, one-sided, full overlap, case differences in usernames,
       duplicates, very large lists (100k+)
 
 ## Phase 2 — Export upload (accurate mode)
 
-- [ ] `ExportFileSource`: read `.zip` via `jszip`
-- [ ] Handle paginated `followers_N.json`
-- [ ] Handle the two different file shapes (array vs. `relationships_following` wrapper)
-- [ ] Accept loose `.json` files and unzipped folders, not just the archive
-- [ ] Schema validation with human-readable failures
-- [ ] Drag-and-drop with a clear non-technical empty state
-- [ ] Guided walkthrough of requesting the export from Instagram
+- [x] `ExportFileSource`: read `.zip` via `jszip`
+- [x] Handle paginated `followers_N.json`
+- [x] Handle the two different file shapes (array vs. `relationships_following` wrapper)
+- [x] Accept loose `.json` files and unzipped folders, not just the archive
+- [x] Schema validation with human-readable failures
+- [x] Drag-and-drop with a clear non-technical empty state
+- [x] Guided walkthrough of requesting the export from Instagram
 
 ## Phase 3 — Results UI
 
 This is where the product either feels friendly or feels like a spreadsheet.
 
-- [ ] Three tabbed lists with counts
-- [ ] Search / filter within a list
-- [ ] Sort by username or by follow date (export mode has timestamps)
-- [ ] Each row links out to the profile
-- [ ] Summary header — totals and a mutual-rate figure
-- [ ] Export results to CSV
-- [ ] Responsive down to ~400px
-- [ ] Light and dark themes
-- [ ] Keyboard navigable, screen-reader sane
+- [x] Three tabbed lists with counts
+- [x] Search / filter within a list
+- [x] Sort by username or by follow date (export mode has timestamps)
+- [x] Each row links out to the profile
+- [x] Summary header — totals and a mutual-rate figure
+- [x] Export results to CSV
+- [x] Responsive down to ~400px
+- [x] Light and dark themes
+- [x] Keyboard navigable, screen-reader sane
 
 ## Phase 4 — Username lookup (convenient mode)
 
@@ -60,10 +60,10 @@ changes.
 
 ## Phase 5 — Polish
 
-- [ ] Extras from the export: pending requests, recently unfollowed
-- [ ] Compare two exports over time to see what changed
-- [ ] Onboarding for first-time visitors
-- [ ] Favicon, social preview, a real landing section
+- [x] Extras from the export: pending requests, recently unfollowed
+- [x] Compare two exports over time to see what changed
+- [x] Onboarding for first-time visitors
+- [x] Favicon, social preview, a real landing section
 
 ## Explicitly out of scope
 
