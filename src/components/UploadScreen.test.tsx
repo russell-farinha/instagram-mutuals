@@ -11,9 +11,11 @@ describe('UploadScreen', () => {
     const { container } = render(
       <UploadScreen isLoading={false} onFiles={vi.fn()} onTryAgain={vi.fn()} />,
     )
-    const fileInput = container.querySelector<HTMLInputElement>('input[accept]')!
-    const folderInput =
-      container.querySelector<HTMLInputElement>('input[webkitdirectory]')!
+    const fileInput =
+      container.querySelector<HTMLInputElement>('input[accept]')!
+    const folderInput = container.querySelector<HTMLInputElement>(
+      'input[webkitdirectory]',
+    )!
     fileInput.click = vi.fn()
     folderInput.click = vi.fn()
 

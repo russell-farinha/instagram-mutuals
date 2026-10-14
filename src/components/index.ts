@@ -1,5 +1,6 @@
 export { ExportComparison } from './ExportComparison'
 export { Footer } from './Footer'
+export { LookupScreen } from './LookupScreen'
 export { Onboarding } from './Onboarding'
 export { ResultsScreen } from './ResultsScreen'
 export { UploadScreen } from './UploadScreen'

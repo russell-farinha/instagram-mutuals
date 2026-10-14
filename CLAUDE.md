@@ -4,8 +4,8 @@ Guidance for Claude Code when working in this repository.
 
 ## What this project is
 
-**Mutuals** — a web app that compares an Instagram account's *followers* against its
-*following* and reports the difference: who you follow that doesn't follow back, who
+**Mutuals** — a web app that compares an Instagram account's _followers_ against its
+_following_ and reports the difference: who you follow that doesn't follow back, who
 follows you that you don't follow back, and who is mutual.
 
 The defining constraint: **it never asks for an Instagram login.** No OAuth, no password,
@@ -22,13 +22,13 @@ These are product-defining, not preferences. If a task appears to require breaki
 stop and raise it with the user instead of working around it.
 
 1. **No backend. Ever.** This is a static SPA deployed to GitHub Pages. The absence of a
-   server *is* the privacy guarantee the product advertises. Do not add API routes, a
+   server _is_ the privacy guarantee the product advertises. Do not add API routes, a
    Node server, an edge function, or a proxy.
 2. **No Instagram credentials.** Never prompt for an Instagram username+password, never
    implement a login flow, never store or transmit an Instagram session cookie, and never
    drive a headless browser against a logged-in Instagram session.
 3. **No secrets in the repo.** There is no project-owned API key. Lookup uses a key the
-   *user* pastes in, held in their own browser. Nothing goes in `.env` and gets committed.
+   _user_ pastes in, held in their own browser. Nothing goes in `.env` and gets committed.
 4. **User data stays on the device.** The export file is parsed in-browser and never
    uploaded. No analytics that carry usernames, no error reporting that includes list
    contents, no telemetry on who was looked up.
@@ -38,25 +38,32 @@ stop and raise it with the user instead of working around it.
 
 ## Verified technical findings — don't rediscover these
 
-Checked 2026-10-14. Instagram has closed *all* anonymous access. Every one of these
+Checked 2026-10-14. Instagram has closed _all_ anonymous access. Every one of these
 returns `HTTP 401 {"require_login": true}`:
 
-| Endpoint | Result |
-|---|---|
-| `GET /api/v1/users/web_profile_info/?username=X` (+ `X-IG-App-ID`) | 401 |
-| `GET /api/v1/friendships/{id}/followers/` | 401 |
-| `GET /api/v1/friendships/{id}/following/` | 401 |
-| `GET /graphql/query/?query_hash=...` (legacy) | 401 |
-| `GET /{username}/?__a=1&__d=dis` (legacy) | dead, empty 201 |
+| Endpoint                                                           | Result          |
+| ------------------------------------------------------------------ | --------------- |
+| `GET /api/v1/users/web_profile_info/?username=X` (+ `X-IG-App-ID`) | 401             |
+| `GET /api/v1/friendships/{id}/followers/`                          | 401             |
+| `GET /api/v1/friendships/{id}/following/`                          | 401             |
+| `GET /graphql/query/?query_hash=...` (legacy)                      | 401             |
+| `GET /{username}/?__a=1&__d=dis` (legacy)                          | dead, empty 201 |
 
 **Consequence:** there is no way to fetch follower/following lists — or even follower
-*counts* — directly from Instagram without authentication. Do not spend time trying. Any
+_counts_ — directly from Instagram without authentication. Do not spend time trying. Any
 username-lookup feature necessarily goes through a third-party provider.
 
 Also verified: RapidAPI-hosted providers return
 `access-control-allow-origin: <reflected origin>` and permit the `x-rapidapi-key` request
 header on preflight. Browser-direct calls therefore work, which is what makes the
 bring-your-own-key model viable with no proxy.
+
+Apify facts (verified 2026-10-14): the convenient-mode actor is
+`scraping_solutions~instagram-scraper-followers-following-no-cookies`; browser calls to
+`https://api.apify.com` allow `Authorization` and return
+`access-control-allow-origin: *`. Send the user token only as `Authorization: Bearer`,
+never as a query parameter. Its `OUTPUT` status `NO_RESULTS` is ambiguous: a missing
+account, private account, and an account with no followers cannot be distinguished.
 
 ## Architecture in one page
 
@@ -71,10 +78,10 @@ interface FollowDataSource {
 
 - **`ExportFileSource`** — user uploads their Instagram "Download Your Information"
   export. Exact and complete, works even for private accounts (it's their own data),
-  free, and fully ToS-clean. This is the *accurate* mode.
+  free, and fully ToS-clean. This is the _accurate_ mode.
 - **`ApiLookupSource`** — user types a username; the browser calls a third-party provider
   directly using a key the user supplied. Convenient, public accounts only, often
-  truncated for large accounts, and may break without warning. This is the *convenient*
+  truncated for large accounts, and may break without warning. This is the _convenient_
   mode.
 
 The comparison engine (`diff(followers, following)`) is pure and must stay free of any

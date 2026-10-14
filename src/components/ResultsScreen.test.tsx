@@ -78,4 +78,20 @@ describe('ResultsScreen', () => {
 
     expect(screen.getByRole('button', { name: 'Show 200 more' })).toBeTruthy()
   })
+
+  it('shows an unmistakable partial-results notice', () => {
+    render(
+      <ResultsScreen
+        followersCount={1}
+        followingCount={1}
+        lists={{ notFollowingBack: [], fans: [], mutuals: [] }}
+        sourceLabel="Lookup"
+        partialNotice
+        onStartOver={() => undefined}
+      />,
+    )
+    expect(screen.getByRole('alert').textContent).toContain(
+      'These results are incomplete',
+    )
+  })
 })

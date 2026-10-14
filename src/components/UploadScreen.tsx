@@ -7,6 +7,7 @@ type UploadScreenProps = {
   isLoading: boolean
   error?: string
   onTryAgain: () => void
+  onLookupInstead?: () => void
 }
 
 type FileSystemEntryLike = {
@@ -82,6 +83,7 @@ export function UploadScreen({
   isLoading,
   error,
   onTryAgain,
+  onLookupInstead,
 }: UploadScreenProps) {
   const fileInput = useRef<HTMLInputElement>(null)
   const folderInput = useRef<HTMLInputElement>(null)
@@ -235,6 +237,15 @@ export function UploadScreen({
           </li>
         </ol>
       </details>
+      {onLookupInstead ? (
+        <button
+          type="button"
+          onClick={onLookupInstead}
+          className="mt-5 self-center text-sm text-slate-600 underline decoration-slate-400 underline-offset-4 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300"
+        >
+          Advanced: look up a public username with your own Apify token →
+        </button>
+      ) : null}
       <Onboarding />
       <Footer />
     </main>

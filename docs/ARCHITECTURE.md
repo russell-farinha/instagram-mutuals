@@ -5,15 +5,15 @@
 Instagram has closed all anonymous access to follower and following data. Verified
 2026-10-14 — every one of these returns `HTTP 401 {"require_login": true}`:
 
-| Endpoint | Result |
-|---|---|
-| `/api/v1/users/web_profile_info/?username=X` (with `X-IG-App-ID`) | 401 |
-| `/api/v1/friendships/{id}/followers/` | 401 |
-| `/api/v1/friendships/{id}/following/` | 401 |
-| `/graphql/query/?query_hash=...` (legacy) | 401 |
-| `/{username}/?__a=1&__d=dis` (legacy) | dead |
+| Endpoint                                                          | Result |
+| ----------------------------------------------------------------- | ------ |
+| `/api/v1/users/web_profile_info/?username=X` (with `X-IG-App-ID`) | 401    |
+| `/api/v1/friendships/{id}/followers/`                             | 401    |
+| `/api/v1/friendships/{id}/following/`                             | 401    |
+| `/graphql/query/?query_hash=...` (legacy)                         | 401    |
+| `/{username}/?__a=1&__d=dis` (legacy)                             | dead   |
 
-Not only are the *lists* gated — so are follower **counts**. There is no longer a
+Not only are the _lists_ gated — so are follower **counts**. There is no longer a
 "scrape the public profile" path of any kind.
 
 This rules out the obvious design (type a username, fetch their lists from Instagram).
@@ -35,7 +35,7 @@ What's left are two legitimate sources, and the app supports both.
 type Account = {
   username: string
   href: string
-  timestamp?: number      // when the follow happened, export only
+  timestamp?: number // when the follow happened, export only
 }
 
 interface FollowDataSource {
@@ -47,10 +47,13 @@ interface FollowDataSource {
 `diff()` is pure and source-agnostic:
 
 ```ts
-function diff(followers: Account[], following: Account[]): {
+function diff(
+  followers: Account[],
+  following: Account[],
+): {
   mutuals: Account[]
-  notFollowingBack: Account[]   // in following, not in followers
-  fans: Account[]               // in followers, not in following
+  notFollowingBack: Account[] // in following, not in followers
+  fans: Account[] // in followers, not in following
 }
 ```
 
@@ -71,6 +74,7 @@ connections/followers_and_following/recently_unfollowed_profiles.json
 ```
 
 Notes that matter for implementation:
+
 - **Followers are paginated across files** — `followers_1.json`, `followers_2.json`, …
   for large accounts. Glob the directory; don't hardcode `_1`.
 - **The two files have different shapes.** Followers is a top-level array; following is
@@ -83,23 +87,24 @@ Notes that matter for implementation:
 ### ApiLookupSource — the convenient path
 
 A username lookup has to go through a third-party provider that maintains its own
-authenticated session pool. Design decision: **the user brings their own API key.**
+authenticated session pool. It is deliberately a secondary, advanced path: export is the
+accurate primary experience, and each visitor brings their own API token.
 
-This was initially assumed to require a backend, since an API key can't ship inside a
-static bundle. Probing a representative RapidAPI host showed otherwise:
+The current adapter is Apify actor
+`scraping_solutions~instagram-scraper-followers-following-no-cookies`. The browser calls
+`api.apify.com` directly: the user-pasted token is sent only in an `Authorization: Bearer`
+header, never in a URL, and no proxy or project key is involved. CORS was verified on
+2026-10-14: `api.apify.com` returns `access-control-allow-origin: *` and permits
+`Authorization`.
 
-```
-access-control-allow-origin: https://russell-farinha.github.io   (origin reflected)
-access-control-allow-headers: x-rapidapi-key, x-rapidapi-host, ...
-access-control-allow-credentials: true
-```
+Apify's `OUTPUT` summary reports `NO_RESULTS` for both missing and private accounts (and
+can also mean no followers), so the UI intentionally does not pretend it can distinguish
+those cases. Continuation cursors are followed one run at a time; when a provider limit or
+the selected maximum stops a list, the result is explicitly marked incomplete.
 
-Preflight permits the key header and reflects the requesting origin, so the browser can
-call the provider **directly**. No proxy, no server, no project-owned key — which is what
-lets the zero-backend guarantee survive alongside the lookup feature.
-
-The key lives in `localStorage` and is sent only to the provider. Treat `localStorage` as
-unreliable (private windows, blocked site data) and degrade gracefully.
+The token can optionally live in `localStorage`, but that storage is treated as unreliable
+(private windows and blocked site data fall back to memory). No proxy, no server, and no
+project-owned key are involved.
 
 Keep the provider behind an adapter so swapping vendors is a single-file change; assume
 the first choice will eventually break.
@@ -118,13 +123,14 @@ trade it away.
 
 What this app deliberately does **not** do, and why:
 
-| Not doing | Why |
-|---|---|
-| Instagram login / OAuth / session cookies | The entire premise. Also what gets users banned. |
-| Headless browser against a logged-in session | Same, plus fragile and against ToS. |
-| Project-owned API key | Would require a server to hold it, and someone to pay per lookup. |
-| Proxy rotation / UA rotation / rate-limit evasion | Circumventing platform defenses. Out of bounds. |
-| Analytics carrying usernames or list contents | Contradicts the privacy claim. |
+| Not doing                                         | Why                                                                                                                                         |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Instagram login / OAuth / session cookies         | The entire premise. Also what gets users banned.                                                                                            |
+| Headless browser against a logged-in session      | Same, plus fragile and against ToS.                                                                                                         |
+| Project-owned API key                             | Would require a server to hold it, and someone to pay per lookup.                                                                           |
+| Shared/project-owned Apify key for public lookups | It is extractable from a static bundle; hiding it needs a server, and the owner would bear the roughly $0.85 per 1,000-account lookup cost. |
+| Proxy rotation / UA rotation / rate-limit evasion | Circumventing platform defenses. Out of bounds.                                                                                             |
+| Analytics carrying usernames or list contents     | Contradicts the privacy claim.                                                                                                              |
 
 Uploaded files are untrusted input. Usernames render as text, never HTML.
 

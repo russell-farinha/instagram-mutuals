@@ -51,12 +51,12 @@ This is where the product either feels friendly or feels like a spreadsheet.
 Deliberately last: it depends on a third party and may need rework when that party
 changes.
 
-- [ ] `ApiLookupSource` against the `FollowDataSource` interface
-- [ ] Settings screen for the user's own API key, stored in `localStorage`
-- [ ] Up-front explanation of the tradeoffs before first use
-- [ ] Clear handling of: private account, account not found, quota exhausted,
+- [x] `ApiLookupSource` against the `FollowDataSource` interface
+- [x] Settings screen for the user's own API key, stored in `localStorage`
+- [x] Up-front explanation of the tradeoffs before first use
+- [x] Clear handling of: private account, account not found, quota exhausted,
       truncated list, provider down
-- [ ] Say so visibly when results are partial — never present a truncated list as complete
+- [x] Say so visibly when results are partial — never present a truncated list as complete
 
 ## Phase 5 — Polish
 

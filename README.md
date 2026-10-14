@@ -35,6 +35,7 @@ that file **in your browser** and never uploads it.
 4. Drag the `.zip` into Mutuals
 
 Why this mode is better:
+
 - **Exact** — the complete lists, not a truncated sample
 - **Works on private accounts**, because it's your own data
 - **Free**, and entirely within Instagram's terms
@@ -46,11 +47,14 @@ Type a public username and get results immediately, with no waiting on an export
 
 The tradeoffs are real and worth knowing up front:
 
-- Instagram blocks all anonymous access to follow lists, so this mode calls a
-  **third-party data provider**. You supply your own API key; it's stored in your browser
-  and never sent anywhere except to that provider.
+- Instagram blocks all anonymous access to follow lists, so this mode calls
+  **Apify**, a third-party data provider. You supply your own Apify token; it can be kept
+  in your browser on this device and is sent only to Apify. Get one from [Apify settings
+  and integrations](https://console.apify.com/settings/integrations).
 - **Public accounts only.** A private account returns nothing.
 - **Large accounts get truncated** — providers cap how much of a list they'll return.
+- Apify uses your own credit (about **$0.85 per 1,000 accounts**; its free plan includes
+  monthly credit).
 - **It can break at any time.** These providers fight an ongoing battle with Instagram's
   defenses, and they lose sometimes.
 
@@ -61,7 +65,7 @@ If you want the real answer, use the export. If you want a quick look, use this.
 - No account connection, no password, no OAuth, no session cookie.
 - No backend. Nothing to log, because there's no server to log it.
 - Your export is parsed locally and never leaves your device.
-- Your provider API key, if you use one, stays in your browser's local storage.
+- Your Apify token, if you choose to remember it, stays in your browser's local storage.
 
 ## Tech
 
@@ -86,7 +90,7 @@ npm run dev
 
 This is built around analyzing **your own** account. That's a deliberate product
 decision, not just a technical one: the accurate mode only works on data Instagram gives
-*you* about *your* account, and that's the use case the tool is designed to serve well.
+_you_ about _your_ account, and that's the use case the tool is designed to serve well.
 
 ## License
 

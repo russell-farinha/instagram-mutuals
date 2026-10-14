@@ -1,4 +1,5 @@
 export { accountsToCsv } from './csv'
+export { clearToken, getToken, setToken } from './tokenStore'
 export {
   filterAndSortAccounts,
   formatFollowDate,

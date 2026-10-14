@@ -31,8 +31,10 @@ type ResultsScreenProps = {
   lists: ResultLists
   sourceLabel: string
   warnings?: readonly string[]
+  partialNotice?: boolean
   comparisonSlot?: ReactNode
   onStartOver: () => void
+  startOverLabel?: string
 }
 
 type Tab = {
@@ -84,8 +86,10 @@ export function ResultsScreen({
   lists,
   sourceLabel,
   warnings = [],
+  partialNotice = false,
   comparisonSlot,
   onStartOver,
+  startOverLabel = 'Start over',
 }: ResultsScreenProps) {
   const prefix = useId()
   const tabs = useMemo<Tab[]>(() => {
@@ -173,7 +177,7 @@ export function ResultsScreen({
             onClick={onStartOver}
             className="rounded-lg border border-slate-300 px-4 py-2 font-semibold hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:border-slate-700 dark:hover:bg-slate-900"
           >
-            Start over
+            {startOverLabel}
           </button>
         </header>
 
@@ -201,6 +205,20 @@ export function ResultsScreen({
                 {warning}
               </p>
             ))}
+          </section>
+        ) : null}
+
+        {partialNotice ? (
+          <section
+            role="alert"
+            className="mt-5 rounded-lg border-2 border-amber-400 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-100"
+          >
+            <p className="font-semibold">These results are incomplete</p>
+            <p className="mt-1">
+              Instagram or the provider returned only part of a list, so “not
+              following back” and “your fans” may include people who actually do
+              follow back.
+            </p>
           </section>
         ) : null}
 
