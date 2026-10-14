@@ -9,8 +9,8 @@ Mutuals compares the list of people you **follow** against the list of people wh
 - **Not following back** — you follow them, they don't follow you
 - **Your fans** — they follow you, you don't follow them back
 
-> **Status: planning.** The design and constraints are settled and written down; the app
-> itself isn't built yet. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
+> **Status: export mode is usable.** Upload an Instagram JSON export to compare your
+> follower and following lists privately. See [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Why another one of these?
 

@@ -1,2 +1,2 @@
-// UI components will be added in later phases.
-export {}
+export { ResultsScreen } from './ResultsScreen'
+export { UploadScreen } from './UploadScreen'
