@@ -87,8 +87,9 @@ export function LookupScreen({ onLookup, onUseExport }: LookupScreenProps) {
           </p>
           <p className="mt-1">
             Apify charges from your credit, roughly $0.85 per 1,000 accounts;
-            its free plan includes monthly credit. Your Instagram export is the
-            accurate option.
+            its free plan includes monthly credit but only a small daily
+            allowance for this lookup. Your Instagram export is the accurate
+            option.
           </p>
           <p className="mt-1">
             A token can access your Apify account, so you may prefer a separate

@@ -196,6 +196,9 @@ export class ApifyProvider implements LookupProvider {
         complete = false
         break
       }
+      // e.g. FREE_API_DAILY_LIMIT_REACHED, reported inside a SUCCEEDED run.
+      if (/LIMIT|QUOTA|CREDIT|USAGE/i.test(summary.status))
+        throw lookupError('quota-exhausted')
       if (summary.status !== 'SUCCEEDED')
         throw lookupError('unexpected-response')
       const fetched = await this.items(

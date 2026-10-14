@@ -258,4 +258,20 @@ describe('ApifyProvider', () => {
       vi.unstubAllGlobals()
     }
   })
+
+  it('maps a daily-limit OUTPUT status to quota-exhausted', async () => {
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(response(run('one')))
+      .mockResolvedValueOnce(
+        response({ status: 'FREE_API_DAILY_LIMIT_REACHED', continuations: [] }),
+      )
+    await expect(
+      new ApifyProvider(fakeCredential, fetcher).fetchList(
+        'someone',
+        'followers',
+        { maxResults: 25 },
+      ),
+    ).rejects.toMatchObject({ kind: 'quota-exhausted' })
+  })
 })
