@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { clearToken, getToken, setToken as saveToken } from '../lib/tokenStore'
+import { formatQuotaReset } from '../sources'
 
 type LookupScreenProps = {
   onLookup: (values: {
@@ -88,8 +89,9 @@ export function LookupScreen({ onLookup, onUseExport }: LookupScreenProps) {
           <p className="mt-1">
             Apify charges from your credit, roughly $0.85 per 1,000 accounts;
             its free plan includes monthly credit. On the free plan this lookup
-            is limited to about 2 lookups and 1,000 accounts a day (it resets at
-            midnight UTC). Your Instagram export is the accurate option.
+            is limited to about 2 lookups and 1,000 accounts a day (it resets
+            daily at {formatQuotaReset()} your time). Your Instagram export is
+            the accurate option.
           </p>
           <p className="mt-1">
             A token can access your Apify account, so you may prefer a separate

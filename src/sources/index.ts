@@ -2,6 +2,7 @@ export { ExportFileSource } from './ExportFileSource'
 export { ApiLookupSource, sanitizeLookupUsername } from './ApiLookupSource'
 export {
   ApifyProvider,
+  formatQuotaReset,
   isLookupError,
   type LookupError,
   type LookupProvider,

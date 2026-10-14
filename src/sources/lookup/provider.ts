@@ -22,10 +22,21 @@ export type LookupErrorKind =
   | 'cancelled'
   | 'unexpected-response'
 
-const messages: Record<LookupErrorKind, string> = {
+/** The free Apify quota resets at midnight UTC; show that in the visitor's local time. */
+export function formatQuotaReset(now: Date = new Date()): string {
+  const reset = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1),
+  )
+  return new Intl.DateTimeFormat(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(reset)
+}
+
+const messages: Record<LookupErrorKind, string | (() => string)> = {
   'invalid-token': 'That Apify token was not accepted. Check it and try again.',
-  'quota-exhausted':
-    'Your Apify account has reached its usage limit. On a free Apify plan this lookup allows about 2 lookups and 1,000 accounts a day, resetting at midnight UTC. Try again then, or upgrade your Apify plan.',
+  'quota-exhausted': () =>
+    `Your Apify account has reached its daily limit. On a free Apify plan this lookup allows about 2 lookups and 1,000 accounts a day. It resets at ${formatQuotaReset()} your time. Try again then, or upgrade your Apify plan.`,
   'not-found-or-private':
     "We couldn't get a list for this account. It may not exist, may be private, or may have no followers.",
   'rate-limited': 'The provider is busy. Please try again shortly.',
@@ -41,7 +52,10 @@ export type LookupError = Error & {
 }
 
 export function lookupError(kind: LookupErrorKind): LookupError {
-  const error = new Error(messages[kind]) as LookupError
+  const message = messages[kind]
+  const error = new Error(
+    typeof message === 'function' ? message() : message,
+  ) as LookupError
   error.name = 'LookupError'
   error.kind = kind
   return error

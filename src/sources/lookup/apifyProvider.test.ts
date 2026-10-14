@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { ApifyProvider } from './apifyProvider'
+import { formatQuotaReset } from './provider'
 
 const fakeCredential = 'test-credential'
 const run = (id: string, status = 'SUCCEEDED') => ({
@@ -273,5 +274,14 @@ describe('ApifyProvider', () => {
         { maxResults: 25 },
       ),
     ).rejects.toMatchObject({ kind: 'quota-exhausted' })
+  })
+
+  it('formats the next UTC-midnight quota reset in local time', () => {
+    const now = new Date(Date.UTC(2026, 9, 14, 22, 18))
+    const expected = new Intl.DateTimeFormat(undefined, {
+      hour: 'numeric',
+      minute: '2-digit',
+    }).format(new Date(Date.UTC(2026, 9, 15)))
+    expect(formatQuotaReset(now)).toBe(expected)
   })
 })
