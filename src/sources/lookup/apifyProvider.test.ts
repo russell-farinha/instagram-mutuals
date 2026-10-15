@@ -276,6 +276,37 @@ describe('ApifyProvider', () => {
     ).rejects.toMatchObject({ kind: 'quota-exhausted' })
   })
 
+  it('accepts a final page whose continuation token is null', async () => {
+    // Shape of a real OUTPUT record from the actor's last page.
+    const fetcher = vi
+      .fn()
+      .mockResolvedValueOnce(response(run('one')))
+      .mockResolvedValueOnce(
+        response({
+          status: 'SUCCEEDED',
+          resultsDelivered: 1,
+          continuations: [
+            {
+              account: 'sample',
+              hasNextPage: false,
+              nextContinuationToken: null,
+              continuationTokenAvailable: false,
+            },
+          ],
+        }),
+      )
+      .mockResolvedValueOnce(
+        response([{ username: 'one', type: 'Followers', id: '1' }]),
+      )
+    const result = await new ApifyProvider(fakeCredential, fetcher).fetchList(
+      'sample',
+      'followers',
+      { maxResults: 500 },
+    )
+    expect(result.accounts).toHaveLength(1)
+    expect(result.complete).toBe(true)
+  })
+
   it('formats the next UTC-midnight quota reset in local time', () => {
     const now = new Date(Date.UTC(2026, 9, 14, 22, 18))
     const expected = new Intl.DateTimeFormat(undefined, {

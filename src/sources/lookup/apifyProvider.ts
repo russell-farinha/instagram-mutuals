@@ -67,14 +67,15 @@ function parseSummary(value: unknown): Summary | undefined {
     const continuation = record(item)
     if (!continuation || typeof continuation.hasNextPage !== 'boolean')
       return undefined
-    const token = continuation.nextContinuationToken
+    // Apify sends `null` rather than omitting the token on the last page.
+    const token = continuation.nextContinuationToken ?? undefined
     if (token !== undefined && typeof token !== 'string') return undefined
     continuations.push({
       hasNextPage: continuation.hasNextPage,
       nextContinuationToken: token,
     })
   }
-  const delivered = data?.resultsDelivered
+  const delivered = data?.resultsDelivered ?? undefined
   if (delivered !== undefined && number(delivered) === undefined)
     return undefined
   return { status, resultsDelivered: number(delivered), continuations }
